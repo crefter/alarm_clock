@@ -1,6 +1,7 @@
 import 'package:alarm_clock/src/app/screens/alarm_screen.dart';
 import 'package:alarm_clock/src/app/screens/clock_screen.dart';
 import 'package:alarm_clock/src/app/screens/timer_screen.dart';
+import 'package:alarm_clock/src/core/widget/custom_tab_bar_indicator.dart';
 import 'package:flutter/material.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -48,14 +49,19 @@ class _HomeScreenState extends State<HomeScreen> {
                       color: const Color.fromARGB(255, 240, 245, 248),
                       borderRadius: BorderRadius.circular(10.0)),
                   child: TabBar(
-                    //TODO: inherited from Decoration and create CustomPainter for custom indicator
-                    indicator: BoxDecoration(
+                    indicator: InsetShadowBoxDecoration(
                       boxShadow: const [
-                        BoxShadow(
-                            color: Color.fromRGBO(0, 0, 0, 0.2),
-                            offset: Offset(0, 4),
-                            blurRadius: 4,
-                        blurStyle: BlurStyle.normal),
+                        CustomBoxShadow(
+                          color: Color.fromRGBO(0, 0, 0, 0.25),
+                          offset: Offset(0, 4),
+                          blurRadius: 4,
+                        ),
+                        CustomBoxShadow(
+                          color: Color.fromRGBO(0, 0, 0, 0.4),
+                          offset: Offset(0, 5),
+                          blurRadius: 4,
+                          inset: true,
+                        ),
                       ],
                       color: const Color.fromARGB(255, 240, 245, 248),
                       borderRadius: BorderRadius.circular(10),
