@@ -1,3 +1,5 @@
+import 'package:alarm_clock/src/core/colors.dart';
+import 'package:alarm_clock/src/features/clock/widgets/clock_widget.dart';
 import 'package:flutter/material.dart';
 
 class ClockScreen extends StatefulWidget {
@@ -21,16 +23,7 @@ class _ClockScreenState extends State<ClockScreen>
       ),
       child: Column(
         children: [
-          SizedBox(
-            width: size.width * 0.64,
-            height: size.width * 0.64,
-            child: DecoratedBox(
-                decoration: BoxDecoration(
-                  color: Colors.red,
-                  borderRadius: BorderRadius.circular(500),
-                ),
-                child: const Center(child: Text('Clock'))),
-          ),
+          ClockWidget(),
           const SizedBox(height: 13),
           Align(
             alignment: Alignment.centerRight,
@@ -39,7 +32,7 @@ class _ClockScreenState extends State<ClockScreen>
               height: 40,
               decoration: const ShapeDecoration(
                 shape: CircleBorder(),
-                color: Color.fromARGB(255, 240, 245, 248),
+                color: AppColors.mainWhite,
               ),
               child: IconButton(
                 splashRadius: 20,

@@ -1,6 +1,7 @@
 import 'package:alarm_clock/src/app/screens/alarm_screen.dart';
 import 'package:alarm_clock/src/app/screens/clock_screen.dart';
 import 'package:alarm_clock/src/app/screens/timer_screen.dart';
+import 'package:alarm_clock/src/core/colors.dart';
 import 'package:alarm_clock/src/core/widget/custom_tab_bar_indicator.dart';
 import 'package:flutter/material.dart';
 
@@ -31,12 +32,12 @@ class _HomeScreenState extends State<HomeScreen> {
                 decoration: const BoxDecoration(
                   boxShadow: [
                     BoxShadow(
-                      color: Color.fromRGBO(255, 255, 255, 0.67),
+                      color: AppColors.topTabShadowColor,
                       offset: Offset(-10, -10),
                       blurRadius: 20,
                     ),
                     BoxShadow(
-                      color: Color.fromRGBO(164, 164, 164, 0.25),
+                      color: AppColors.bottomTabShadowColor,
                       offset: Offset(10, 10),
                       blurRadius: 20,
                     ),
@@ -46,33 +47,28 @@ class _HomeScreenState extends State<HomeScreen> {
                   width: 0.9 * size.width,
                   height: 45,
                   decoration: BoxDecoration(
-                      color: const Color.fromARGB(255, 240, 245, 248),
+                      color: AppColors.mainWhite,
                       borderRadius: BorderRadius.circular(10.0)),
                   child: TabBar(
                     indicator: InsetShadowBoxDecoration(
                       boxShadow: const [
                         CustomBoxShadow(
-                          color: Color.fromRGBO(0, 0, 0, 0.25),
+                          color: AppColors.outerShadowIndicatorColor,
                           offset: Offset(0, 4),
                           blurRadius: 4,
                         ),
                         CustomBoxShadow(
-                          color: Color.fromRGBO(0, 0, 0, 0.4),
+                          color: AppColors.innerShadowIndicatorColor,
                           offset: Offset(0, 5),
                           blurRadius: 4,
                           inset: true,
                         ),
                       ],
-                      color: const Color.fromARGB(255, 240, 245, 248),
+                      color: AppColors.mainWhite,
                       borderRadius: BorderRadius.circular(10),
                     ),
                     labelColor: Colors.black,
-                    unselectedLabelColor: const Color.fromARGB(
-                      255,
-                      133,
-                      133,
-                      133,
-                    ),
+                    unselectedLabelColor: AppColors.unselectedTabColor,
                     tabs: const [
                       Tab(
                         text: 'World clock',
