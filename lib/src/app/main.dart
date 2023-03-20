@@ -1,4 +1,5 @@
 import 'package:alarm_clock/src/app/screens/home_screen.dart';
+import 'package:alarm_clock/src/core/colors.dart';
 import 'package:flutter/material.dart';
 
 void main() {
@@ -14,6 +15,7 @@ class MyApp extends StatelessWidget {
       title: 'Flutter Demo',
       theme: ThemeData(
         primarySwatch: Colors.blue,
+        scaffoldBackgroundColor: AppColors.mainWhite,
       ),
       home: const SafeArea(child: HomeScreen()),
     );
