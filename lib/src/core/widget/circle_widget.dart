@@ -2,16 +2,22 @@ import 'package:alarm_clock/src/core/colors.dart';
 import 'package:flutter/material.dart';
 
 class CircleWidget extends StatelessWidget {
+  final double width;
+  final double height;
   final Widget child;
 
-  const CircleWidget({Key? key, required this.child}) : super(key: key);
+  const CircleWidget({
+    Key? key,
+    required this.child,
+    required this.width,
+    required this.height,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    final Size size = MediaQuery.of(context).size;
     return SizedBox(
-      width: size.width * 0.64,
-      height: size.width * 0.64,
+      width: width,
+      height: height,
       child: DecoratedBox(
         decoration: BoxDecoration(
           color: AppColors.mainWhite,

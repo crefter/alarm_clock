@@ -23,7 +23,7 @@ class _ClockScreenState extends State<ClockScreen>
       ),
       child: Column(
         children: [
-          ClockWidget(),
+          const ClockWidget(),
           const SizedBox(height: 13),
           Align(
             alignment: Alignment.centerRight,

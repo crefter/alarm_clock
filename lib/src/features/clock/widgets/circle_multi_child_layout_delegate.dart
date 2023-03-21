@@ -36,10 +36,7 @@ class CircleMultiChildLayoutDelegate extends MultiChildLayoutDelegate {
             radius - size.height / 2 + sin(radians) * (radius - size.height);
         positionChild(
           id.id,
-          Offset(
-            dx,
-            dy,
-          ),
+          Offset(dx, dy),
         );
       }
     }
