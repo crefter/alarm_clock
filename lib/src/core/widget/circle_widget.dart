@@ -1,4 +1,4 @@
-import 'package:alarm_clock/src/core/colors.dart';
+import 'package:alarm_clock/src/core/app_colors.dart';
 import 'package:flutter/material.dart';
 
 class CircleWidget extends StatelessWidget {
@@ -24,7 +24,7 @@ class CircleWidget extends StatelessWidget {
           borderRadius: BorderRadius.circular(500),
           boxShadow: const [
             BoxShadow(
-              color: AppColors.black,
+              color: AppColors.lightBlack,
               offset: Offset(10, 10),
               blurRadius: 20,
             ),

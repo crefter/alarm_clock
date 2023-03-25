@@ -1,7 +1,8 @@
 import 'package:alarm_clock/src/app/screens/alarm_screen.dart';
 import 'package:alarm_clock/src/app/screens/clock_screen.dart';
 import 'package:alarm_clock/src/app/screens/timer_screen.dart';
-import 'package:alarm_clock/src/core/colors.dart';
+import 'package:alarm_clock/src/core/app_colors.dart';
+import 'package:alarm_clock/src/core/text_styles.dart';
 import 'package:alarm_clock/src/core/widget/custom_tab_bar_indicator.dart';
 import 'package:flutter/material.dart';
 
@@ -21,6 +22,7 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
+    final themeData = Theme.of(context);
     return DefaultTabController(
       length: 3,
       child: Scaffold(
@@ -67,8 +69,10 @@ class _HomeScreenState extends State<HomeScreen> {
                       color: AppColors.mainWhite,
                       borderRadius: BorderRadius.circular(10),
                     ),
-                    labelColor: Colors.black,
-                    unselectedLabelColor: AppColors.unselectedTabColor,
+                    labelColor: themeData.tabBarSelectedStyle.color,
+                    unselectedLabelColor: themeData.tabBarUnselectedStyle.color,
+                    labelStyle: themeData.tabBarSelectedStyle,
+                    unselectedLabelStyle: themeData.tabBarUnselectedStyle,
                     tabs: const [
                       Tab(
                         text: 'World clock',

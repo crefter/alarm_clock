@@ -8,7 +8,15 @@ abstract class AppColors {
   static const Color unselectedTabColor = Color.fromRGBO(0, 0, 0, 0.25);
   static const Color bottomTabShadowColor = Color.fromRGBO(164, 164, 164, 0.25);
   static const Color topTabShadowColor = Color.fromRGBO(255, 255, 255, 0.67);
-  static const Color black = Color.fromRGBO(0, 0, 0, 0.25);
+  static const Color lightBlack = Color.fromRGBO(0, 0, 0, 0.25);
+  static const Color selectedTabBarColor = Color.fromRGBO(0, 0, 0, 1);
   static const Color hourArrowColor = Color.fromARGB(255, 9, 9, 9);
   static const Color minuteArrowColor = Color.fromRGBO(252, 62, 85, 0.84);
+  static const Color unselectedTabBarColor = Color.fromRGBO(133, 133, 133, 1);
+  static const Color timeZoneTextColor = Color.fromRGBO(0, 0, 0, 0.48);
+  static const Color dateTextColor = Color.fromARGB(255, 0, 0, 0);
+  static const Color actionIconButtonDarkShadow =
+      Color.fromRGBO(31, 31, 31, 0.25);
+  static const Color actionIconButtonLightShadow =
+      Color.fromRGBO(255, 255, 255, 0.25);
 }

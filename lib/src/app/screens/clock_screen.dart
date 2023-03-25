@@ -1,5 +1,6 @@
-import 'package:alarm_clock/src/core/colors.dart';
 import 'package:alarm_clock/src/features/clock/widgets/clock_widget.dart';
+import 'package:alarm_clock/src/features/clock/widgets/date_widget.dart';
+import 'package:alarm_clock/src/features/clock/widgets/time_zone_widget.dart';
 import 'package:flutter/material.dart';
 
 class ClockScreen extends StatefulWidget {
@@ -24,28 +25,10 @@ class _ClockScreenState extends State<ClockScreen>
       child: Column(
         children: [
           const ClockWidget(),
-          const SizedBox(height: 13),
-          Align(
-            alignment: Alignment.centerRight,
-            child: Ink(
-              width: 40,
-              height: 40,
-              decoration: const ShapeDecoration(
-                shape: CircleBorder(),
-                color: AppColors.mainWhite,
-              ),
-              child: IconButton(
-                splashRadius: 20,
-                padding: EdgeInsets.zero,
-                onPressed: () {},
-                icon: const Icon(Icons.add),
-              ),
-            ),
-          ),
-          SizedBox(height: size.height * 0.11),
-          const Text('Nepal time'),
+          SizedBox(height: size.height * 0.12),
+          const TimeZoneWidget(),
           const SizedBox(height: 22),
-          const Text('May 7 Friday'),
+          const DateWidget(),
         ],
       ),
     );
