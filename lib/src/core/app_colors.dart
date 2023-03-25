@@ -15,8 +15,9 @@ abstract class AppColors {
   static const Color unselectedTabBarColor = Color.fromRGBO(133, 133, 133, 1);
   static const Color timeZoneTextColor = Color.fromRGBO(0, 0, 0, 0.48);
   static const Color dateTextColor = Color.fromARGB(255, 0, 0, 0);
-  static const Color actionIconButtonDarkShadow =
+  static const Color actionIconButtonDarkShadowColor =
       Color.fromRGBO(31, 31, 31, 0.25);
-  static const Color actionIconButtonLightShadow =
-      Color.fromRGBO(255, 255, 255, 0.25);
+  static const Color lightShadowColor = Color.fromRGBO(255, 255, 255, 0.25);
+  static const Color tileColor = Color.fromARGB(255, 223, 223, 223);
+  static const Color checkedTileColor = Color.fromARGB(255, 251, 99, 163);
 }

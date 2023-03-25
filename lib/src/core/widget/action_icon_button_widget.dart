@@ -21,12 +21,12 @@ class ActionIconButton extends StatelessWidget {
           BoxShadow(
             offset: Offset(10, 10),
             blurRadius: 20,
-            color: AppColors.actionIconButtonDarkShadow,
+            color: AppColors.actionIconButtonDarkShadowColor,
           ),
           BoxShadow(
             offset: Offset(-10, -10),
             blurRadius: 20,
-            color: AppColors.actionIconButtonLightShadow,
+            color: AppColors.lightShadowColor,
           ),
         ],
       ),
