@@ -9,7 +9,22 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 void main() {
-  runApp(const MyApp());
+  final clockBloc = ClockBloc(
+    ClockRepositoryImpl(
+      timeApi: TimeApi(
+        dayMapper: NumberWeekdayToNameMapper(),
+        monthMapper: MonthMapper(),
+      ),
+    ),
+  );
+  clockBloc.add(const ClockEvent.start());
+  Future.delayed(Duration.zero);
+  runApp(
+    BlocProvider.value(
+      value: clockBloc,
+      child: const MyApp(),
+    ),
+  );
 }
 
 class MyApp extends StatelessWidget {
@@ -23,17 +38,7 @@ class MyApp extends StatelessWidget {
         primarySwatch: Colors.blue,
         scaffoldBackgroundColor: AppColors.mainWhite,
       ),
-      home: SafeArea(child: BlocProvider(
-        create: (context) => ClockBloc(
-          ClockRepositoryImpl(
-            timeApi: TimeApi(
-              dayMapper: NumberWeekdayToNameMapper(),
-              monthMapper: MonthMapper(),
-            ),
-          ),
-        )..add(const ClockEvent.start()),
-        child: const HomeScreen(),
-      )),
+      home: const SafeArea(child: HomeScreen()),
     );
   }
 }
