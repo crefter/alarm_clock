@@ -1,5 +1,8 @@
+import 'dart:async';
+
 import 'package:alarm_clock/src/app/screens/home_screen.dart';
 import 'package:alarm_clock/src/core/app_colors.dart';
+import 'package:alarm_clock/src/features/alarm/src/domain/alarm_bloc.dart';
 import 'package:alarm_clock/src/features/clock/src/data/clock_repository_impl.dart';
 import 'package:alarm_clock/src/features/clock/src/data/month_mapper.dart';
 import 'package:alarm_clock/src/features/clock/src/data/number_weekday_to_name_mapper.dart';
@@ -8,7 +11,9 @@ import 'package:alarm_clock/src/features/clock/src/domain/clock_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-void main() {
+Future<void> main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+
   final clockBloc = ClockBloc(
     ClockRepositoryImpl(
       timeApi: TimeApi(
@@ -22,7 +27,10 @@ void main() {
   runApp(
     BlocProvider.value(
       value: clockBloc,
-      child: const MyApp(),
+      child: BlocProvider<AlarmBloc>(
+        create: (context) => AlarmBloc()..add(const AlarmEvent.start()),
+        child: const MyApp(),
+      ),
     ),
   );
 }

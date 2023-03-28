@@ -8,21 +8,60 @@ extension AppTextStyle on ThemeData {
         fontSize: 12,
         color: AppColors.selectedTabBarColor,
       );
+
   TextStyle get tabBarUnselectedStyle => GoogleFonts.roboto(
-    fontWeight: FontWeight.w400,
-    fontSize: 12,
-    color: AppColors.unselectedTabBarColor,
-  );
+        fontWeight: FontWeight.w400,
+        fontSize: 12,
+        color: AppColors.unselectedTabBarColor,
+      );
 
   TextStyle get timeZoneStyle => GoogleFonts.roboto(
-    fontWeight: FontWeight.w400,
-    fontSize: 18,
-    color: AppColors.timeZoneTextColor,
-  );
+        fontWeight: FontWeight.w400,
+        fontSize: 18,
+        color: AppColors.timeZoneTextColor,
+      );
 
   TextStyle get dateStyle => GoogleFonts.roboto(
-    fontWeight: FontWeight.w400,
-    fontSize: 18,
-    color: AppColors.dateTextColor,
-  );
+        fontWeight: FontWeight.w400,
+        fontSize: 18,
+        color: AppColors.black,
+      );
+
+  TextStyle get timeBlackStyle => GoogleFonts.roboto(
+        fontSize: 36,
+        fontWeight: FontWeight.w400,
+        color: AppColors.black,
+      );
+
+  TextStyle get timeWhiteStyle => GoogleFonts.roboto(
+        fontSize: 36,
+        fontWeight: FontWeight.w400,
+        color: AppColors.white,
+      );
+
+  TextStyle get daysAlarmBlackStyle => GoogleFonts.roboto(
+        fontSize: 14,
+        fontWeight: FontWeight.w400,
+        color: AppColors.black,
+      );
+
+  TextStyle get daysAlarmWhiteStyle => GoogleFonts.roboto(
+        fontSize: 14,
+        fontWeight: FontWeight.w400,
+        color: AppColors.white,
+      );
+
+  TextStyle get AMBlackStyle => GoogleFonts.roboto(
+        fontSize: 18,
+        fontWeight: FontWeight.w400,
+        color: AppColors.blackOpacity7,
+        height: 2.2,
+      );
+
+  TextStyle get AMWhiteStyle => GoogleFonts.roboto(
+        fontSize: 18,
+        fontWeight: FontWeight.w400,
+        color: AppColors.whiteOpacity7,
+        height: 2.2,
+      );
 }

@@ -3,6 +3,7 @@ import 'dart:ui';
 abstract class AppColors {
   static const Color mainWhite = Color.fromARGB(255, 240, 245, 248);
   static const Color white = Color.fromARGB(255, 255, 255, 255);
+  static const Color whiteOpacity7 = Color.fromRGBO(255, 255, 255, 0.7);
   static const Color innerShadowIndicatorColor = Color.fromRGBO(0, 0, 0, 0.4);
   static const Color outerShadowIndicatorColor = Color.fromRGBO(0, 0, 0, 0.25);
   static const Color unselectedTabColor = Color.fromRGBO(0, 0, 0, 0.25);
@@ -14,7 +15,8 @@ abstract class AppColors {
   static const Color minuteArrowColor = Color.fromRGBO(252, 62, 85, 0.84);
   static const Color unselectedTabBarColor = Color.fromRGBO(133, 133, 133, 1);
   static const Color timeZoneTextColor = Color.fromRGBO(0, 0, 0, 0.48);
-  static const Color dateTextColor = Color.fromARGB(255, 0, 0, 0);
+  static const Color black = Color.fromARGB(255, 0, 0, 0);
+  static const Color blackOpacity7 = Color.fromRGBO(0, 0, 0, 0.7);
   static const Color actionIconButtonDarkShadowColor =
       Color.fromRGBO(31, 31, 31, 0.25);
   static const Color lightShadowColor = Color.fromRGBO(255, 255, 255, 0.25);

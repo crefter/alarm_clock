@@ -1,4 +1,4 @@
-import 'package:alarm_clock/src/core/widget/action_icon_button_widget.dart';
+import 'package:alarm_clock/src/core/widgets/action_icon_button_widget.dart';
 import 'package:alarm_clock/src/features/alarm/widgets/alarms_list_widget.dart';
 import 'package:flutter/material.dart';
 

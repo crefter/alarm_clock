@@ -1,4 +1,4 @@
-import 'package:alarm_clock/src/core/widget/circle_widget.dart';
+import 'package:alarm_clock/src/core/widgets/circle_widget.dart';
 import 'package:alarm_clock/src/features/clock/widgets/arrow_widget.dart';
 import 'package:alarm_clock/src/features/clock/widgets/circle_multi_child_layout_delegate.dart';
 import 'package:alarm_clock/src/features/clock/widgets/clock_numbers_widget.dart';
