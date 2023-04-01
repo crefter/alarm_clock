@@ -1,13 +1,16 @@
+import 'package:alarm_clock/src/core/models/alarm_type.dart';
+
 class Alarm {
   final int id;
   final String time;
-
+  final AlarmType type;
   //am or pm
   final String timeOfDay;
   final String days;
   final bool on;
 
   Alarm({
+    required this.type,
     required this.id,
     required this.time,
     required this.timeOfDay,
@@ -36,12 +39,14 @@ class Alarm {
 
   Alarm copyWith({
     int? id,
+    AlarmType? type,
     String? time,
     String? timeOfDay,
     String? days,
     bool? on,
   }) {
     return Alarm(
+      type: type ?? this.type,
       id: id ?? this.id,
       time: time ?? this.time,
       timeOfDay: timeOfDay ?? this.timeOfDay,

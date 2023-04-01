@@ -1,4 +1,5 @@
 import 'package:alarm_clock/src/core/app_colors.dart';
+import 'package:alarm_clock/src/core/bloc/notification_bloc.dart';
 import 'package:alarm_clock/src/core/text_styles.dart';
 import 'package:alarm_clock/src/features/alarm/src/domain/alarm_bloc.dart';
 import 'package:flutter/material.dart';
@@ -80,13 +81,16 @@ class AlarmItemWidget extends StatelessWidget {
                   Switch.adaptive(
                     value: alarm.on,
                     onChanged: (value) {
-                      alarm.on
-                          ? context
-                              .read<AlarmBloc>()
-                              .add(AlarmEvent.off(alarm.id))
-                          : context
-                              .read<AlarmBloc>()
-                              .add(AlarmEvent.on(alarm.id));
+                      if (alarm.on) {
+                        context.read<AlarmBloc>().add(AlarmEvent.off(alarm.id));
+                        context
+                            .read<NotificationBloc>()
+                            .add(NotificationEvent.cancel(alarm.id));
+                      } else {
+                        context.read<AlarmBloc>().add(AlarmEvent.on(alarm.id));
+                        // TODO: в зависимости от типа кидать нужный ивент
+                        //context.read<NotificationBloc>().add(NotificationEvent.add(, title, description, id))
+                      }
                     },
                   ),
                 ],

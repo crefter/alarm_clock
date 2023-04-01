@@ -2,6 +2,8 @@ import 'dart:async';
 
 import 'package:alarm_clock/src/app/screens/home_screen.dart';
 import 'package:alarm_clock/src/core/app_colors.dart';
+import 'package:alarm_clock/src/core/bloc/notification_bloc.dart';
+import 'package:alarm_clock/src/core/services/local_notification_service.dart';
 import 'package:alarm_clock/src/features/alarm/src/domain/alarm_bloc.dart';
 import 'package:alarm_clock/src/features/clock/src/data/clock_repository_impl.dart';
 import 'package:alarm_clock/src/features/clock/src/data/month_mapper.dart';
@@ -14,6 +16,11 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
+  LocalNotificationService notificationService = LocalNotificationService();
+  await notificationService.initialize();
+  NotificationBloc notificationBloc = NotificationBloc(
+      notificationService: notificationService);
+
   final clockBloc = ClockBloc(
     ClockRepositoryImpl(
       timeApi: TimeApi(
@@ -25,10 +32,19 @@ Future<void> main() async {
   clockBloc.add(const ClockEvent.start());
   Future.delayed(Duration.zero);
   runApp(
-    BlocProvider.value(
-      value: clockBloc,
+    MultiBlocProvider(
+      providers: [
+        BlocProvider.value(
+          value: clockBloc,
+        ),
+        BlocProvider.value(
+          value: notificationBloc,
+        ),
+      ],
       child: BlocProvider<AlarmBloc>(
-        create: (context) => AlarmBloc()..add(const AlarmEvent.start()),
+        create: (context) =>
+        AlarmBloc()
+          ..add(const AlarmEvent.start()),
         child: const MyApp(),
       ),
     ),

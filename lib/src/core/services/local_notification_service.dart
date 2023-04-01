@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:io';
 
+import 'package:alarm_clock/src/core/models/alarm_details.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:timezone/timezone.dart' as tz;
 import 'package:timezone/data/latest.dart' as tzData;
@@ -73,8 +74,12 @@ class LocalNotificationService {
     }
   }
 
-  Future<void> addNotification(
+  // TODO: сделать для каждого дня
+  Future<void> addEverydayNotification(
     DateTime endTime,
+    String title,
+    String description,
+    int id,
   ) async {
     tzData.initializeTimeZones();
     final scheduleTime = tz.TZDateTime.fromMillisecondsSinceEpoch(
@@ -83,9 +88,9 @@ class LocalNotificationService {
     );
 
     const androidDetail = AndroidNotificationDetails(
-        'channel_id', // channel Id
-        'channel_name' // channel Name
-        );
+      'channel_id',
+      'channel_name',
+    );
 
     const iosDetail = DarwinNotificationDetails(
       categoryIdentifier: darwinNotificationCategoryPlain,
@@ -96,18 +101,101 @@ class LocalNotificationService {
       android: androidDetail,
     );
 
-    const id = 0;
-
     await _localNotifications.zonedSchedule(
       id,
-      'Alarm!',
-      'Alarm is started',
+      title,
+      description,
       scheduleTime,
       noticeDetail,
       uiLocalNotificationDateInterpretation:
           UILocalNotificationDateInterpretation.absoluteTime,
       androidAllowWhileIdle: true,
     );
+
+    // TODO: save to local storage
+  }
+
+  // TODO: сделать для каждого буднего дня
+  Future<void> addWeekdayNotification(
+      DateTime endTime,
+      String title,
+      String description,
+      int id,
+      ) async {
+    tzData.initializeTimeZones();
+    final scheduleTime = tz.TZDateTime.fromMillisecondsSinceEpoch(
+      tz.local,
+      endTime.millisecondsSinceEpoch,
+    );
+
+    const androidDetail = AndroidNotificationDetails(
+      'channel_id',
+      'channel_name',
+    );
+
+    const iosDetail = DarwinNotificationDetails(
+      categoryIdentifier: darwinNotificationCategoryPlain,
+    );
+
+    const noticeDetail = NotificationDetails(
+      iOS: iosDetail,
+      android: androidDetail,
+    );
+
+    await _localNotifications.zonedSchedule(
+      id,
+      title,
+      description,
+      scheduleTime,
+      noticeDetail,
+      uiLocalNotificationDateInterpretation:
+      UILocalNotificationDateInterpretation.absoluteTime,
+      androidAllowWhileIdle: true,
+    );
+
+    // TODO: save to local storage
+  }
+
+  // TODO: переделать для одного дня, а вызывать для каждого - в блоке
+  Future<void> addSelectedDaysNotification(
+      Map<int, AlarmDetails> alarms,
+      ) async {
+    for (final element in alarms.entries) {
+      tzData.initializeTimeZones();
+      final alarm = element.value;
+      final scheduleTime = tz.TZDateTime.fromMillisecondsSinceEpoch(
+        tz.local,
+        alarm.endTime.millisecondsSinceEpoch,
+      );
+
+      const androidDetail = AndroidNotificationDetails(
+        'channel_id',
+        'channel_name',
+      );
+
+      const iosDetail = DarwinNotificationDetails(
+        categoryIdentifier: darwinNotificationCategoryPlain,
+      );
+
+      const noticeDetail = NotificationDetails(
+        iOS: iosDetail,
+        android: androidDetail,
+      );
+
+      await _localNotifications.zonedSchedule(
+        element.key,
+        alarm.title,
+        alarm.description,
+        scheduleTime,
+        noticeDetail,
+        uiLocalNotificationDateInterpretation:
+        UILocalNotificationDateInterpretation.absoluteTime,
+        androidAllowWhileIdle: true,
+        matchDateTimeComponents: DateTimeComponents.dayOfWeekAndTime,
+      );
+
+      // TODO: save to local storage
+    }
   }
 
   Future<bool> _isAndroidPermissionGranted() async {
@@ -122,8 +210,9 @@ class LocalNotificationService {
     return false;
   }
 
-  Future<void> cancelAllNotification() async {
-    _localNotifications.cancelAll();
+  Future<void> cancel(int id) async {
+    // TODO: take notification from local storage
+    _localNotifications.cancel(id);
   }
 
   Future<bool?> _initializeLocalNotification(

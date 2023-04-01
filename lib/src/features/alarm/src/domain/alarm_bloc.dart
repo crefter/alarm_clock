@@ -1,3 +1,4 @@
+import 'package:alarm_clock/src/core/models/alarm_type.dart';
 import 'package:alarm_clock/src/features/alarm/src/domain/alarm.dart';
 import 'package:bloc/bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
@@ -75,6 +76,7 @@ class AlarmBloc extends Bloc<AlarmEvent, AlarmState> {
       AlarmState.permissionGranted(
         [
           Alarm(
+            type: AlarmType.selectedDays,
             id: 1,
             time: '5:00',
             timeOfDay: 'AM',
@@ -82,6 +84,7 @@ class AlarmBloc extends Bloc<AlarmEvent, AlarmState> {
             on: true,
           ),
           Alarm(
+            type: AlarmType.selectedDays,
             id: 2,
             time: '7:00',
             timeOfDay: 'AM',
@@ -89,6 +92,7 @@ class AlarmBloc extends Bloc<AlarmEvent, AlarmState> {
             on: false,
           ),
           Alarm(
+            type: AlarmType.everyday,
             id: 3,
             time: '7:30',
             timeOfDay: 'AM',
