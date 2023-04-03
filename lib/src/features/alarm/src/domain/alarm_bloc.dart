@@ -1,4 +1,7 @@
-import 'package:alarm_clock/src/core/models/alarm_type.dart';
+import 'dart:math';
+
+import 'package:alarm_clock/src/features/alarm/src/domain/alarm_repository.dart';
+import 'package:alarm_clock/src/features/alarm/src/domain/alarm_type.dart';
 import 'package:alarm_clock/src/features/alarm/src/domain/alarm.dart';
 import 'package:bloc/bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
@@ -10,7 +13,9 @@ part 'alarm_state.dart';
 part 'alarm_bloc.freezed.dart';
 
 class AlarmBloc extends Bloc<AlarmEvent, AlarmState> {
-  AlarmBloc() : super(const AlarmState.initial()) {
+  final AlarmRepository repository;
+
+  AlarmBloc({required this.repository}) : super(const AlarmState.initial()) {
     on<AlarmEvent>((event, emit) async {
       await event.map<Future<void>>(
         addAlarm: (event) => _onAddAlarm(event, emit),
@@ -22,20 +27,40 @@ class AlarmBloc extends Bloc<AlarmEvent, AlarmState> {
     });
   }
 
-  Future<void> _onAddAlarm(
-    _AlarmAddAlarmEvent event,
-    Emitter<AlarmState> emit,
-  ) async {}
+  Future<void> _onAddAlarm(_AlarmAddAlarmEvent event,
+      Emitter<AlarmState> emit,) async {
+    final list = List.of(
+      state.maybeWhen<List<Alarm>>(
+        orElse: () => [],
+        permissionGranted: (alarms) => alarms,
+      ),
+    );
+    final alarm = Alarm(type: event.type,
+      id: Random(DateTime.now().millisecondsSinceEpoch).nextInt(1000000),
+      time: event.time,
+      timeOfDay: event.timeOfDay,
+      days: event.days,
+      on: event.on,);
+    list.add(alarm);
+    emit(AlarmState.permissionGranted(list));
+    repository.save(list);
+  }
 
-  Future<void> _onDeleteAlarm(
-    _AlarmDeleteAlarmEvent event,
-    Emitter<AlarmState> emit,
-  ) async {}
+  Future<void> _onDeleteAlarm(_AlarmDeleteAlarmEvent event,
+      Emitter<AlarmState> emit,) async {
+    final list = List.of(
+      state.maybeWhen<List<Alarm>>(
+        orElse: () => [],
+        permissionGranted: (alarms) => alarms,
+      ),
+    );
+    list.remove(event.alarm);
+    emit(AlarmState.permissionGranted(list));
+    await repository.save(list);
+  }
 
-  Future<void> _onOn(
-    _AlarmOnEvent event,
-    Emitter<AlarmState> emit,
-  ) async {
+  Future<void> _onOn(_AlarmOnEvent event,
+      Emitter<AlarmState> emit,) async {
     final list = List.of(
       state.maybeWhen<List<Alarm>>(
         orElse: () => [],
@@ -48,12 +73,11 @@ class AlarmBloc extends Bloc<AlarmEvent, AlarmState> {
     list.removeAt(index);
     list.insert(index, newAlarm);
     emit(AlarmState.permissionGranted(list));
+    await repository.save(list);
   }
 
-  Future<void> _onOff(
-    _AlarmOffEvent event,
-    Emitter<AlarmState> emit,
-  ) async {
+  Future<void> _onOff(_AlarmOffEvent event,
+      Emitter<AlarmState> emit,) async {
     final list = List.of(
       state.maybeWhen<List<Alarm>>(
         orElse: () => [],
@@ -66,12 +90,12 @@ class AlarmBloc extends Bloc<AlarmEvent, AlarmState> {
     list.removeAt(index);
     list.insert(index, newAlarm);
     emit(AlarmState.permissionGranted(list));
+    await repository.save(list);
   }
 
-  Future<void> _onStart(
-    _AlarmStartEvent event,
-    Emitter<AlarmState> emit,
-  ) async {
+  Future<void> _onStart(_AlarmStartEvent event,
+      Emitter<AlarmState> emit,) async {
+    await repository.get();
     emit(
       AlarmState.permissionGranted(
         [
@@ -94,8 +118,8 @@ class AlarmBloc extends Bloc<AlarmEvent, AlarmState> {
           Alarm(
             type: AlarmType.everyday,
             id: 3,
-            time: '7:30',
-            timeOfDay: 'AM',
+            time: '11:48',
+            timeOfDay: 'PM',
             days: 'Everyday',
             on: false,
           )

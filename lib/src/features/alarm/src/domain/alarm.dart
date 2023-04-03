@@ -1,9 +1,10 @@
-import 'package:alarm_clock/src/core/models/alarm_type.dart';
+import 'package:alarm_clock/src/features/alarm/src/domain/alarm_type.dart';
 
 class Alarm {
   final int id;
   final String time;
   final AlarmType type;
+
   //am or pm
   final String timeOfDay;
   final String days;
@@ -36,6 +37,28 @@ class Alarm {
       timeOfDay.hashCode ^
       days.hashCode ^
       on.hashCode;
+
+  factory Alarm.fromJson(Map<String, dynamic> json) {
+    return Alarm(
+      type: AlarmType.values[json['type']],
+      id: int.parse(json['id']),
+      time: json['time'],
+      timeOfDay: json['timeOfDay'],
+      days: json['days'],
+      on: json['on'],
+    );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'id':'$id',
+      'time':time,
+      'type':type.index,
+      'timeOfDay':timeOfDay,
+      'days':days,
+      'on':on,
+    };
+  }
 
   Alarm copyWith({
     int? id,

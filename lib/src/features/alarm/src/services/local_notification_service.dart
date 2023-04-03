@@ -1,12 +1,12 @@
 import 'dart:async';
 import 'dart:io';
+import 'dart:math';
 
-import 'package:alarm_clock/src/core/models/alarm_details.dart';
+import 'package:alarm_clock/src/features/alarm/src/domain/notification_repository.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:timezone/timezone.dart' as tz;
 import 'package:timezone/data/latest.dart' as tzData;
-
-// TODO: USE SERVICE IN MAIN
 
 const String navigationActionId = 'id_3';
 
@@ -30,11 +30,14 @@ const String darwinNotificationCategoryPlain = 'plainCategory';
 
 class LocalNotificationService {
   late final FlutterLocalNotificationsPlugin _localNotifications;
+  final NotificationRepository notificationRepository;
+
+  LocalNotificationService({required this.notificationRepository});
 
   Future<void> initialize() async {
     _localNotifications = FlutterLocalNotificationsPlugin();
     const AndroidInitializationSettings initializationSettingsAndroid =
-        AndroidInitializationSettings('app_icon');
+        AndroidInitializationSettings('ic_launcher');
 
     const InitializationSettings initializationSettings =
         InitializationSettings(
@@ -74,12 +77,11 @@ class LocalNotificationService {
     }
   }
 
-  // TODO: сделать для каждого дня
   Future<void> addEverydayNotification(
     DateTime endTime,
     String title,
     String description,
-    int id,
+    int alarmId,
   ) async {
     tzData.initializeTimeZones();
     final scheduleTime = tz.TZDateTime.fromMillisecondsSinceEpoch(
@@ -101,27 +103,22 @@ class LocalNotificationService {
       android: androidDetail,
     );
 
-    await _localNotifications.zonedSchedule(
-      id,
-      title,
-      description,
-      scheduleTime,
-      noticeDetail,
-      uiLocalNotificationDateInterpretation:
-          UILocalNotificationDateInterpretation.absoluteTime,
-      androidAllowWhileIdle: true,
-    );
+    int id = Random(DateTime.now().microsecondsSinceEpoch).nextInt(1000000);
 
-    // TODO: save to local storage
+    await _scheduleDailyNotification(id, scheduleTime.hour, scheduleTime.minute,
+        title, description, noticeDetail);
+
+    debugPrint('Everyday');
+    notificationRepository.save(alarmId, [id]);
   }
 
-  // TODO: сделать для каждого буднего дня
-  Future<void> addWeekdayNotification(
-      DateTime endTime,
-      String title,
-      String description,
-      int id,
-      ) async {
+  Future<void> addSelectedDaysNotification(
+    DateTime endTime,
+    String title,
+    String description,
+    int alarmId,
+    int numberDay,
+  ) async {
     tzData.initializeTimeZones();
     final scheduleTime = tz.TZDateTime.fromMillisecondsSinceEpoch(
       tz.local,
@@ -142,60 +139,14 @@ class LocalNotificationService {
       android: androidDetail,
     );
 
-    await _localNotifications.zonedSchedule(
-      id,
-      title,
-      description,
-      scheduleTime,
-      noticeDetail,
-      uiLocalNotificationDateInterpretation:
-      UILocalNotificationDateInterpretation.absoluteTime,
-      androidAllowWhileIdle: true,
-    );
+    int id = Random(DateTime.now().microsecondsSinceEpoch).nextInt(1000000);
 
-    // TODO: save to local storage
-  }
+    await _scheduleWeeklyNotification(id, numberDay, scheduleTime.hour,
+        scheduleTime.minute, title, description, noticeDetail);
 
-  // TODO: переделать для одного дня, а вызывать для каждого - в блоке
-  Future<void> addSelectedDaysNotification(
-      Map<int, AlarmDetails> alarms,
-      ) async {
-    for (final element in alarms.entries) {
-      tzData.initializeTimeZones();
-      final alarm = element.value;
-      final scheduleTime = tz.TZDateTime.fromMillisecondsSinceEpoch(
-        tz.local,
-        alarm.endTime.millisecondsSinceEpoch,
-      );
-
-      const androidDetail = AndroidNotificationDetails(
-        'channel_id',
-        'channel_name',
-      );
-
-      const iosDetail = DarwinNotificationDetails(
-        categoryIdentifier: darwinNotificationCategoryPlain,
-      );
-
-      const noticeDetail = NotificationDetails(
-        iOS: iosDetail,
-        android: androidDetail,
-      );
-
-      await _localNotifications.zonedSchedule(
-        element.key,
-        alarm.title,
-        alarm.description,
-        scheduleTime,
-        noticeDetail,
-        uiLocalNotificationDateInterpretation:
-        UILocalNotificationDateInterpretation.absoluteTime,
-        androidAllowWhileIdle: true,
-        matchDateTimeComponents: DateTimeComponents.dayOfWeekAndTime,
-      );
-
-      // TODO: save to local storage
-    }
+    final ids = await notificationRepository.get(alarmId);
+    ids.add(id);
+    await notificationRepository.save(alarmId, ids);
   }
 
   Future<bool> _isAndroidPermissionGranted() async {
@@ -210,9 +161,12 @@ class LocalNotificationService {
     return false;
   }
 
-  Future<void> cancel(int id) async {
-    // TODO: take notification from local storage
-    _localNotifications.cancel(id);
+  Future<void> cancel(int alarmId) async {
+    final ids = await notificationRepository.get(alarmId);
+    for (int id in ids) {
+      _localNotifications.cancel(id);
+    }
+    notificationRepository.delete(alarmId);
   }
 
   Future<bool?> _initializeLocalNotification(
@@ -234,5 +188,61 @@ class LocalNotificationService {
       },
       onDidReceiveBackgroundNotificationResponse: notificationTapBackground,
     );
+  }
+
+  tz.TZDateTime _nextInstanceOfHM(int hour, int minute) {
+    final tz.TZDateTime now = tz.TZDateTime.now(tz.local);
+    tz.TZDateTime scheduledDate =
+        tz.TZDateTime(tz.local, now.year, now.month, now.day, hour, minute);
+    if (scheduledDate.isBefore(now)) {
+      scheduledDate = scheduledDate.add(const Duration(days: 1));
+    }
+    return scheduledDate;
+  }
+
+  tz.TZDateTime _nextInstanceOfDayHM(int day, int hour, int minute) {
+    tz.TZDateTime scheduledDate = _nextInstanceOfHM(hour, minute);
+    while (scheduledDate.weekday != day) {
+      scheduledDate = scheduledDate.add(const Duration(days: 1));
+    }
+    return scheduledDate;
+  }
+
+  Future<void> _scheduleDailyNotification(int id, int hour, int minute,
+      String title, String description, NotificationDetails details) async {
+    await _localNotifications.zonedSchedule(
+      id,
+      title,
+      description,
+      _nextInstanceOfHM(hour, minute),
+      details,
+      uiLocalNotificationDateInterpretation:
+          UILocalNotificationDateInterpretation.absoluteTime,
+      matchDateTimeComponents: DateTimeComponents.time,
+      androidAllowWhileIdle: true,
+    );
+  }
+
+  Future<void> _scheduleWeeklyNotification(
+      int id,
+      int day,
+      int hour,
+      int minute,
+      String title,
+      String description,
+      NotificationDetails details) async {
+    debugPrint('Weekly');
+    await _localNotifications.zonedSchedule(
+      id,
+      title,
+      description,
+      _nextInstanceOfDayHM(day, hour, minute),
+      details,
+      uiLocalNotificationDateInterpretation:
+          UILocalNotificationDateInterpretation.absoluteTime,
+      matchDateTimeComponents: DateTimeComponents.dayOfWeekAndTime,
+      androidAllowWhileIdle: true,
+    );
+    debugPrint('jopa');
   }
 }

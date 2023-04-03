@@ -1,4 +1,4 @@
-import 'package:alarm_clock/src/core/widgets/action_icon_button_widget.dart';
+import 'package:alarm_clock/src/features/alarm/widgets/alarm_action_icon_button.dart';
 import 'package:alarm_clock/src/features/alarm/widgets/alarms_list_widget.dart';
 import 'package:flutter/material.dart';
 
@@ -21,16 +21,14 @@ class AlarmScreen extends StatelessWidget {
             height: size.height * 0.046,
           ),
         ),
-        SliverToBoxAdapter(
+        const SliverToBoxAdapter(
           child: Align(
             alignment: Alignment.centerRight,
             child: Padding(
-              padding: const EdgeInsets.only(
+              padding: EdgeInsets.only(
                 right: 17,
               ),
-              child: ActionIconButton(
-                onPressed: () {},
-              ),
+              child: AlarmActionIconButton(),
             ),
           ),
         ),

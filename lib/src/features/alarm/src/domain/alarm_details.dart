@@ -2,14 +2,12 @@ class AlarmDetails {
   final String title;
   final String description;
   final DateTime endTime;
-  final String day;
-  final String timeOfDay;
+  int numberDay;
 
   AlarmDetails({
     required this.title,
     required this.description,
     required this.endTime,
-    required this.day,
-    required this.timeOfDay,
+    required this.numberDay,
   });
 }

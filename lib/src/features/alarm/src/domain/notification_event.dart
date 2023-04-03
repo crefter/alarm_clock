@@ -9,16 +9,12 @@ class NotificationEvent with _$NotificationEvent {
     int id,
   ) = _NotificationAddEverydayEvent;
 
-  const factory NotificationEvent.addWeekday(
-      DateTime endTime,
-      String title,
-      String description,
-      int id,
-      ) = _NotificationAddWeekdayEvent;
-
   const factory NotificationEvent.addSelectedDays(
-      Map<int, AlarmDetails> alarms,
-      ) = _NotificationAddSelectedDaysEvent;
+    int id,
+    List<AlarmDetails> details,
+  ) = _NotificationAddSelectedDaysEvent;
+
+  const factory NotificationEvent.add(Alarm alarm) = _NotificationAddEvent;
 
   const factory NotificationEvent.cancel(int id) = _NotificationCancelEvent;
 }

@@ -6,9 +6,10 @@ class AlarmEvent with _$AlarmEvent {
 
   const factory AlarmEvent.addAlarm(
     String time,
-    String timeOfDat,
+    String timeOfDay,
     String days,
     bool on,
+      AlarmType type,
   ) = _AlarmAddAlarmEvent;
 
   const factory AlarmEvent.deleteAlarm(Alarm alarm) = _AlarmDeleteAlarmEvent;
