@@ -2,7 +2,7 @@ import 'package:alarm_clock/src/app/screens/alarm_screen.dart';
 import 'package:alarm_clock/src/app/screens/clock_screen.dart';
 import 'package:alarm_clock/src/app/screens/timer_screen.dart';
 import 'package:alarm_clock/src/core/app_colors.dart';
-import 'package:alarm_clock/src/core/text_styles.dart';
+import 'package:alarm_clock/src/core/app_style.dart';
 import 'package:alarm_clock/src/core/widgets/custom_tab_bar_indicator.dart';
 import 'package:flutter/material.dart';
 

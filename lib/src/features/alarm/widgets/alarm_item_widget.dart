@@ -1,6 +1,6 @@
 import 'package:alarm_clock/src/core/app_colors.dart';
 import 'package:alarm_clock/src/features/alarm/src/domain/notification_bloc.dart';
-import 'package:alarm_clock/src/core/text_styles.dart';
+import 'package:alarm_clock/src/core/app_style.dart';
 import 'package:alarm_clock/src/features/alarm/src/domain/alarm_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';

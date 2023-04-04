@@ -2,7 +2,7 @@ import 'package:alarm_clock/src/core/app_colors.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-extension AppTextStyle on ThemeData {
+extension AppStyles on ThemeData {
   TextStyle get tabBarSelectedStyle => GoogleFonts.roboto(
         fontWeight: FontWeight.w400,
         fontSize: 12,
