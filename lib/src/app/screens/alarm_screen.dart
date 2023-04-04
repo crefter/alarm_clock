@@ -32,6 +32,11 @@ class AlarmScreen extends StatelessWidget {
             ),
           ),
         ),
+        const SliverToBoxAdapter(
+          child: SizedBox(
+            height: 48,
+          ),
+        )
       ],
     );
   }
