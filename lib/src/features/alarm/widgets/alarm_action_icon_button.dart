@@ -185,7 +185,7 @@ class _AlarmActionIconButtonState extends State<AlarmActionIconButton> {
                               : minuteItem.toString();
                           String time = '$hour:$minute';
                           String selectedDays =
-                              days.isEmpty ? 'Everyday' : days.join();
+                              days.isEmpty ? 'Everyday' : days.join(", ");
                           Alarm alarm = Alarm(
                             id: Random(DateTime.now().millisecondsSinceEpoch)
                                 .nextInt(1000000),

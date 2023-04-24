@@ -19,9 +19,60 @@ class AlarmItemWidget extends StatelessWidget {
           orElse: () => const SizedBox.shrink(),
           permissionGranted: (alarms) {
             final alarm = alarms[index];
-            return Container(
-              height: 98,
-              decoration: BoxDecoration(
+            return GestureDetector(
+              onTap: () {
+                showDialog(
+                  context: context,
+                  builder: (context) {
+                    return AlertDialog(
+                      content: SizedBox(
+                        height: MediaQuery.of(context).size.height / 8,
+                        child: Column(
+                          children: [
+                            const Text('Удалить будильник?'),
+                            const SizedBox(
+                              height: 20,
+                            ),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                ElevatedButton(
+                                  onPressed: () {
+                                    if (alarm.on) {
+                                      context
+                                          .read<NotificationBloc>()
+                                          .add(NotificationEvent.cancel(
+                                        alarm.id,
+                                      ));
+                                    }
+                                    context
+                                        .read<AlarmBloc>()
+                                        .add(AlarmEvent.deleteAlarm(
+                                      alarm,
+                                    ));
+                                    Navigator.pop(context);
+                                  },
+                                  child: const Text('Да'),
+                                ),
+                                const SizedBox(
+                                  width: 40,
+                                ),
+                                ElevatedButton(
+                                  onPressed: () => Navigator.pop(context),
+                                  child: const Text('Нет'),
+                                ),
+                              ],
+                            ),
+                          ],
+                        ),
+                      ),
+                    );
+                  },
+                );
+              },
+              child: Container(
+                height: 98,
+                decoration: BoxDecoration(
                   color: alarm.on
                       ? AppColors.checkedTileColor
                       : AppColors.tileColor,
@@ -37,64 +88,70 @@ class AlarmItemWidget extends StatelessWidget {
                       blurRadius: 20,
                       color: AppColors.lightShadowColor,
                     ),
-                  ]),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.only(left: 11, top: 21),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Row(
-                          crossAxisAlignment: CrossAxisAlignment.end,
-                          children: [
-                            AnimatedDefaultTextStyle(
-                              duration: durationTextColorAnimation,
-                              style: alarm.on
-                                  ? Theme.of(context).timeWhiteStyle
-                                  : Theme.of(context).timeBlackStyle,
-                              child: Text(alarm.time),
-                            ),
-                            const SizedBox(
-                              width: 2,
-                            ),
-                            AnimatedDefaultTextStyle(
-                              style: alarm.on
-                                  ? Theme.of(context).AMWhiteStyle
-                                  : Theme.of(context).AMBlackStyle,
-                              duration: durationTextColorAnimation,
-                              child: Text(alarm.timeOfDay),
-                            ),
-                          ],
-                        ),
-                        AnimatedDefaultTextStyle(
-                          style: alarm.on
-                              ? Theme.of(context).daysAlarmWhiteStyle
-                              : Theme.of(context).daysAlarmBlackStyle,
-                          duration: durationTextColorAnimation,
-                          child: Text(alarm.days),
-                        ),
-                      ],
+                  ],
+                ),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.only(left: 11, top: 21),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Row(
+                            crossAxisAlignment: CrossAxisAlignment.end,
+                            children: [
+                              AnimatedDefaultTextStyle(
+                                duration: durationTextColorAnimation,
+                                style: alarm.on
+                                    ? Theme.of(context).timeWhiteStyle
+                                    : Theme.of(context).timeBlackStyle,
+                                child: Text(alarm.time),
+                              ),
+                              const SizedBox(
+                                width: 2,
+                              ),
+                              AnimatedDefaultTextStyle(
+                                style: alarm.on
+                                    ? Theme.of(context).AMWhiteStyle
+                                    : Theme.of(context).AMBlackStyle,
+                                duration: durationTextColorAnimation,
+                                child: Text(alarm.timeOfDay),
+                              ),
+                            ],
+                          ),
+                          AnimatedDefaultTextStyle(
+                            style: alarm.on
+                                ? Theme.of(context).daysAlarmWhiteStyle
+                                : Theme.of(context).daysAlarmBlackStyle,
+                            duration: durationTextColorAnimation,
+                            child: Text(alarm.days),
+                          ),
+                        ],
+                      ),
                     ),
-                  ),
-                  Switch.adaptive(
-                    value: alarm.on,
-                    onChanged: (value) {
-                      if (alarm.on) {
-                        context.read<AlarmBloc>().add(AlarmEvent.off(alarm.id));
-                        context
-                            .read<NotificationBloc>()
-                            .add(NotificationEvent.cancel(alarm.id));
-                      } else {
-                        context.read<AlarmBloc>().add(AlarmEvent.on(alarm.id));
-                        context
-                            .read<NotificationBloc>()
-                            .add(NotificationEvent.add(alarm));
-                      }
-                    },
-                  ),
-                ],
+                    Switch.adaptive(
+                      value: alarm.on,
+                      onChanged: (value) {
+                        if (alarm.on) {
+                          context
+                              .read<AlarmBloc>()
+                              .add(AlarmEvent.off(alarm.id));
+                          context
+                              .read<NotificationBloc>()
+                              .add(NotificationEvent.cancel(alarm.id));
+                        } else {
+                          context
+                              .read<AlarmBloc>()
+                              .add(AlarmEvent.on(alarm.id));
+                          context
+                              .read<NotificationBloc>()
+                              .add(NotificationEvent.add(alarm));
+                        }
+                      },
+                    ),
+                  ],
+                ),
               ),
             );
           },

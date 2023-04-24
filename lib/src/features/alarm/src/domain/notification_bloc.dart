@@ -22,7 +22,7 @@ class NotificationBloc extends Bloc<NotificationEvent, NotificationState> {
         addEveryday: (event) => _onAddEveryday(event, emit),
         cancel: (event) => _onCancel(event, emit),
         addSelectedDays: (event) => _onAddSelectedDays(event, emit),
-        add: (event) => _onAdd(event),
+        add: (event) => _onAdd(event, emit),
       );
     });
   }
@@ -44,6 +44,8 @@ class NotificationBloc extends Bloc<NotificationEvent, NotificationState> {
     Emitter<NotificationState> emit,
   ) async {
     await notificationService.cancel(event.id);
+    emit(const NotificationState.canceled());
+    emit(const NotificationState.initial());
   }
 
   Future<void> _onAddSelectedDays(
@@ -56,12 +58,15 @@ class NotificationBloc extends Bloc<NotificationEvent, NotificationState> {
     }
   }
 
-  Future<void> _onAdd(_NotificationAddEvent event) async {
+  Future<void> _onAdd(
+    _NotificationAddEvent event,
+    Emitter<NotificationState> emit,
+  ) async {
     Alarm alarm = event.alarm;
     List<String> strTime = alarm.time.split(':');
     int hour = int.parse(strTime[0]);
     int minute = int.parse(strTime[1]);
-    if (alarm.timeOfDay == "AM") {
+    if (alarm.timeOfDay == "PM") {
       hour += 12;
     }
     switch (alarm.type) {
@@ -122,6 +127,8 @@ class NotificationBloc extends Bloc<NotificationEvent, NotificationState> {
         );
         break;
     }
+    emit(const NotificationState.added());
+    emit(const NotificationState.initial());
   }
 
   DateTime _nextInstanceOfHM(int hour, int minute) {
