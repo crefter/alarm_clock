@@ -12,8 +12,8 @@ class AlarmsListWidget extends StatelessWidget {
     return BlocListener<NotificationBloc, NotificationState>(
       listener: (context, state) {
         state.when(
-          added: () => _showSnackBar(context, 'Alarm off!'),
-          canceled: () => _showSnackBar(context, 'Alarm on!'),
+          added: () => _showSnackBar(context, 'Alarm on!'),
+          canceled: () => _showSnackBar(context, 'Alarm off!'),
           initial: () {},
         );
       },
