@@ -12,8 +12,8 @@ class AlarmsListWidget extends StatelessWidget {
     return BlocListener<NotificationBloc, NotificationState>(
       listener: (context, state) {
         state.when(
-          added: () => _showSnackBar(context, 'Будильник установлен!'),
-          canceled: () => _showSnackBar(context, 'Будильник отключен!'),
+          added: () => _showSnackBar(context, 'Alarm off!'),
+          canceled: () => _showSnackBar(context, 'Alarm on!'),
           initial: () {},
         );
       },
@@ -63,7 +63,7 @@ class AlarmsListWidget extends StatelessWidget {
     return ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         duration: const Duration(
-          milliseconds: 1000,
+          milliseconds: 1500,
         ),
         content: Text(text),
       ),

@@ -29,7 +29,7 @@ class AlarmItemWidget extends StatelessWidget {
                         height: MediaQuery.of(context).size.height / 8,
                         child: Column(
                           children: [
-                            const Text('Удалить будильник?'),
+                            const Text('Delete alarm?'),
                             const SizedBox(
                               height: 20,
                             ),
@@ -52,14 +52,14 @@ class AlarmItemWidget extends StatelessWidget {
                                     ));
                                     Navigator.pop(context);
                                   },
-                                  child: const Text('Да'),
+                                  child: const Text('Yes'),
                                 ),
                                 const SizedBox(
                                   width: 40,
                                 ),
                                 ElevatedButton(
                                   onPressed: () => Navigator.pop(context),
-                                  child: const Text('Нет'),
+                                  child: const Text('No'),
                                 ),
                               ],
                             ),

@@ -3,17 +3,21 @@ import 'package:flutter/material.dart';
 
 class ActionIconButton extends StatelessWidget {
   final void Function() onPressed;
+  final double size;
+  final Icon icon;
 
   const ActionIconButton({
     Key? key,
     required this.onPressed,
+    required this.size,
+    required this.icon,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Ink(
-      width: 40,
-      height: 40,
+      width: size,
+      height: size,
       decoration: const ShapeDecoration(
         shape: CircleBorder(),
         color: AppColors.mainWhite,
@@ -34,7 +38,7 @@ class ActionIconButton extends StatelessWidget {
         splashRadius: 20,
         padding: EdgeInsets.zero,
         onPressed: onPressed,
-        icon: const Icon(Icons.add),
+        icon: icon,
       ),
     );
   }

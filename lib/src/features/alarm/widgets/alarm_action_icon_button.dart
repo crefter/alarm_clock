@@ -3,6 +3,7 @@ import 'dart:math';
 import 'package:alarm_clock/src/core/app_colors.dart';
 import 'package:alarm_clock/src/core/app_style.dart';
 import 'package:alarm_clock/src/core/widgets/action_icon_button_widget.dart';
+import 'package:alarm_clock/src/core/widgets/my_list_wheel_scroll_view.dart';
 import 'package:alarm_clock/src/features/alarm/src/domain/alarm.dart';
 import 'package:alarm_clock/src/features/alarm/src/domain/alarm_bloc.dart';
 import 'package:alarm_clock/src/features/alarm/src/domain/alarm_type.dart';
@@ -40,6 +41,8 @@ class _AlarmActionIconButtonState extends State<AlarmActionIconButton> {
   @override
   Widget build(BuildContext context) {
     return ActionIconButton(
+      size: 40,
+      icon: const Icon(Icons.add),
       onPressed: () {
         showModalBottomSheet(
           context: context,
@@ -62,7 +65,7 @@ class _AlarmActionIconButtonState extends State<AlarmActionIconButton> {
                         SizedBox(
                           height: 80,
                           width: 40,
-                          child: _ListWheelScrollView(
+                          child: MyListWheelScrollView(
                             controller: _hourController,
                             countItems: 12,
                           ),
@@ -70,7 +73,7 @@ class _AlarmActionIconButtonState extends State<AlarmActionIconButton> {
                         SizedBox(
                           height: 80,
                           width: 40,
-                          child: _ListWheelScrollView(
+                          child: MyListWheelScrollView(
                             controller: _minuteController,
                             countItems: 60,
                           ),
@@ -229,33 +232,5 @@ class _BottomSheetTextWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Text(text, style: Theme.of(context).dateStyle);
-  }
-}
-
-class _ListWheelScrollView extends StatelessWidget {
-  const _ListWheelScrollView({
-    required FixedExtentScrollController controller,
-    required this.countItems,
-  }) : _controller = controller;
-
-  final FixedExtentScrollController _controller;
-  final int countItems;
-
-  @override
-  Widget build(BuildContext context) {
-    return ListWheelScrollView(
-      controller: _controller,
-      useMagnifier: true,
-      magnification: 1.2,
-      diameterRatio: 2,
-      itemExtent: 30,
-      children: List.generate(
-        countItems,
-        (index) => Text(
-          index < 10 ? '0$index' : '$index',
-          style: Theme.of(context).dateStyle,
-        ),
-      ),
-    );
   }
 }
