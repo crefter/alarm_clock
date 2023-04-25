@@ -1,0 +1,1 @@
+class TimerNullException implements Exception {}
