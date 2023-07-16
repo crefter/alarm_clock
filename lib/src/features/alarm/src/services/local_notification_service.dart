@@ -3,6 +3,7 @@ import 'dart:io';
 import 'dart:math';
 
 import 'package:alarm_clock/src/features/alarm/src/domain/notification_repository.dart';
+import 'package:alarm_clock/src/features/alarm/src/services/alarm_service.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:timezone/timezone.dart' as tz;
@@ -23,6 +24,7 @@ void notificationTapBackground(NotificationResponse notificationResponse) {
     // ignore: avoid_print
     print(
         'notification action tapped with input: ${notificationResponse.input}');
+    AlarmService.stop(notificationResponse.id!);
   }
 }
 
@@ -83,6 +85,7 @@ class LocalNotificationService {
     String description,
     int alarmId,
   ) async {
+    endTime = endTime.copyWith(second: 0);
     tzData.initializeTimeZones();
     final scheduleTime = tz.TZDateTime.fromMillisecondsSinceEpoch(
       tz.local,
@@ -219,7 +222,7 @@ class LocalNotificationService {
       uiLocalNotificationDateInterpretation:
           UILocalNotificationDateInterpretation.absoluteTime,
       matchDateTimeComponents: DateTimeComponents.time,
-      androidAllowWhileIdle: true,
+      androidScheduleMode: AndroidScheduleMode.exactAllowWhileIdle,
     );
   }
 
@@ -241,7 +244,7 @@ class LocalNotificationService {
       uiLocalNotificationDateInterpretation:
           UILocalNotificationDateInterpretation.absoluteTime,
       matchDateTimeComponents: DateTimeComponents.dayOfWeekAndTime,
-      androidAllowWhileIdle: true,
+      androidScheduleMode: AndroidScheduleMode.exactAllowWhileIdle,
     );
     debugPrint('jopa');
   }

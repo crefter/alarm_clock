@@ -6,6 +6,7 @@ import 'package:alarm_clock/src/features/alarm/src/data/alarm_repository_impl.da
 import 'package:alarm_clock/src/features/alarm/src/data/notification_repository_impl.dart';
 import 'package:alarm_clock/src/features/alarm/src/domain/notification_bloc.dart';
 import 'package:alarm_clock/src/features/alarm/src/domain/alarm_bloc.dart';
+import 'package:alarm_clock/src/features/alarm/src/services/alarm_service.dart';
 import 'package:alarm_clock/src/features/alarm/src/services/local_notification_service.dart';
 import 'package:alarm_clock/src/features/clock/src/data/clock_repository_impl.dart';
 import 'package:alarm_clock/src/features/clock/src/data/month_mapper.dart';
@@ -21,12 +22,15 @@ Future<void> main() async {
 
   SharedPreferences sp = await SharedPreferences.getInstance();
 
+  await AlarmService.init();
+
   LocalNotificationService notificationService = LocalNotificationService(
     notificationRepository: NotificationRepositoryImpl(sp),
   );
   await notificationService.initialize();
-  NotificationBloc notificationBloc =
-      NotificationBloc(notificationService: notificationService);
+  NotificationBloc notificationBloc = NotificationBloc(
+    notificationService: notificationService,
+  );
 
   final clockBloc = ClockBloc(
     ClockRepositoryImpl(

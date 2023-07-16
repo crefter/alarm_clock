@@ -8,7 +8,7 @@ class TimeDto {
 
   TimeDto(this.hours, this.minutes, this.timeZone, this.date);
 
-  Clock toDto() {
+  Clock toClock() {
     return Clock(
       hours: hours,
       minutes: minutes,

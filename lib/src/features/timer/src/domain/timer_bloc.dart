@@ -30,7 +30,7 @@ class TimerBloc extends Bloc<TimerEvent, TimerState> {
     Emitter<TimerState> emit,
   ) async {
     final time = state.time;
-    if (time.seconds != 0) {
+    if (time.isNotEmpty()) {
       emit(TimerState.started(time));
       _timer = Timer.periodic(
         const Duration(
@@ -57,17 +57,17 @@ class TimerBloc extends Bloc<TimerEvent, TimerState> {
     Emitter<TimerState> emit,
   ) async {
     final time = state.time;
-    if (time.seconds != 0) {
+    if (time.hasSeconds()) {
       final newTime = time.copyWith(time.hours, time.minutes, time.seconds - 1);
       emit(TimerState.ticking(newTime));
       return;
     }
-    if (time.minutes != 0) {
+    if (time.hasMinutes()) {
       final newTime = time.copyWith(time.hours, time.minutes - 1, 59);
       emit(TimerState.ticking(newTime));
       return;
     }
-    if (time.hours != 0) {
+    if (time.hasHours()) {
       final newTime = time.copyWith(time.hours - 1, 59, 59);
       emit(TimerState.ticking(newTime));
       return;

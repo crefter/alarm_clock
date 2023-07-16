@@ -13,7 +13,7 @@ class ClockRepositoryImpl implements ClockRepository {
       const Duration(seconds: 1),
       (_) => timeApi.getTime(),
     ).asyncMap<Clock>(
-      (event) async => (await event).toDto(),
+      (event) async => (await event).toClock(),
     );
   }
 }

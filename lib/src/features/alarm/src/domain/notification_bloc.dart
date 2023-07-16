@@ -1,6 +1,7 @@
 import 'package:alarm_clock/src/features/alarm/src/domain/alarm.dart';
 import 'package:alarm_clock/src/features/alarm/src/domain/alarm_details.dart';
 import 'package:alarm_clock/src/features/alarm/src/domain/alarm_type.dart';
+import 'package:alarm_clock/src/features/alarm/src/services/alarm_service.dart';
 import 'package:alarm_clock/src/features/alarm/src/services/local_notification_service.dart';
 import 'package:bloc/bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
@@ -31,12 +32,14 @@ class NotificationBloc extends Bloc<NotificationEvent, NotificationState> {
     _NotificationAddEverydayEvent event,
     Emitter<NotificationState> emit,
   ) async {
+    DateTime endTime = event.endTime.copyWith(second: 0);
     await notificationService.addEverydayNotification(
-      event.endTime,
+      endTime,
       event.title,
       event.description,
       event.id,
     );
+    await AlarmService.start(endTime, event.id);
   }
 
   Future<void> _onCancel(
@@ -44,6 +47,7 @@ class NotificationBloc extends Bloc<NotificationEvent, NotificationState> {
     Emitter<NotificationState> emit,
   ) async {
     await notificationService.cancel(event.id);
+    await AlarmService.stop(event.id);
     emit(const NotificationState.canceled());
     emit(const NotificationState.initial());
   }
@@ -55,6 +59,7 @@ class NotificationBloc extends Bloc<NotificationEvent, NotificationState> {
     for (final detail in event.details) {
       await notificationService.addSelectedDaysNotification(detail.endTime,
           detail.title, detail.description, event.id, detail.numberDay);
+      await AlarmService.start(detail.endTime, event.id);
     }
   }
 
