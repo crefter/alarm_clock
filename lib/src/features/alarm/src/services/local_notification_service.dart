@@ -3,7 +3,6 @@ import 'dart:io';
 import 'dart:math';
 
 import 'package:alarm_clock/src/features/alarm/src/domain/notification_repository.dart';
-import 'package:alarm_clock/src/features/alarm/src/services/alarm_service.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:timezone/timezone.dart' as tz;
@@ -15,16 +14,15 @@ final StreamController<String?> selectNotificationStream =
     StreamController<String?>.broadcast();
 
 @pragma('vm:entry-point')
-void notificationTapBackground(NotificationResponse notificationResponse) {
+void notificationTapBackground(NotificationResponse notificationResponse) async {
   // ignore: avoid_print
-  print('notification(${notificationResponse.id}) action tapped: '
+  debugPrint('notification(${notificationResponse.id}) action tapped: '
       '${notificationResponse.actionId} with'
       ' payload: ${notificationResponse.payload}');
   if (notificationResponse.input?.isNotEmpty ?? false) {
     // ignore: avoid_print
-    print(
+    debugPrint(
         'notification action tapped with input: ${notificationResponse.input}');
-    AlarmService.stop(notificationResponse.id!);
   }
 }
 
@@ -34,7 +32,9 @@ class LocalNotificationService {
   late final FlutterLocalNotificationsPlugin _localNotifications;
   final NotificationRepository notificationRepository;
 
-  LocalNotificationService({required this.notificationRepository});
+  LocalNotificationService({
+    required this.notificationRepository,
+  });
 
   Future<void> initialize() async {
     _localNotifications = FlutterLocalNotificationsPlugin();
@@ -95,6 +95,13 @@ class LocalNotificationService {
     const androidDetail = AndroidNotificationDetails(
       'channel_id',
       'channel_name',
+      actions: [
+        AndroidNotificationAction(
+          'id_1',
+          'Turn off',
+          showsUserInterface: true,
+        ),
+      ],
     );
 
     const iosDetail = DarwinNotificationDetails(
@@ -108,8 +115,8 @@ class LocalNotificationService {
 
     int id = Random(DateTime.now().microsecondsSinceEpoch).nextInt(1000000);
 
-    await _scheduleDailyNotification(id, scheduleTime.hour, scheduleTime.minute,
-        title, description, noticeDetail);
+    await _scheduleDailyNotification(alarmId, scheduleTime.hour,
+        scheduleTime.minute, title, description, noticeDetail);
 
     debugPrint('Everyday');
     notificationRepository.save(alarmId, [id]);
@@ -144,7 +151,7 @@ class LocalNotificationService {
 
     int id = Random(DateTime.now().microsecondsSinceEpoch).nextInt(1000000);
 
-    await _scheduleWeeklyNotification(id, numberDay, scheduleTime.hour,
+    await _scheduleWeeklyNotification(alarmId, numberDay, scheduleTime.hour,
         scheduleTime.minute, title, description, noticeDetail);
 
     final ids = await notificationRepository.get(alarmId);
@@ -177,7 +184,7 @@ class LocalNotificationService {
     return _localNotifications.initialize(
       initializationSettings,
       onDidReceiveNotificationResponse:
-          (NotificationResponse notificationResponse) {
+          (NotificationResponse notificationResponse) async {
         switch (notificationResponse.notificationResponseType) {
           case NotificationResponseType.selectedNotification:
             selectNotificationStream.add(notificationResponse.payload);

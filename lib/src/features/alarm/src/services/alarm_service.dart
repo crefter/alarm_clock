@@ -6,8 +6,10 @@ import 'package:flutter/foundation.dart';
 import 'package:vibration/vibration.dart';
 
 class AlarmService {
+  static final audioPlayer = AudioPlayer();
   static Future<void> init() async {
     await AndroidAlarmManager.initialize();
+    audioPlayer.setSourceAsset('alarm.mp3');
   }
 
   static Future<void> start(DateTime dateTime, int id) async {
@@ -22,24 +24,22 @@ class AlarmService {
     );
   }
 
-  static Future<void> stop(int id) async {
+  static Future<void> cancel(int id) async {
     await AndroidAlarmManager.cancel(id);
   }
 
   @pragma('vm:entry-point')
   static Future<void> callback(int id, Map<String, dynamic> data) async {
     debugPrint('Alarm played');
-    final audioPlayer = AudioPlayer();
     triggerVibrations(duration: 15000);
     try {
-      audioPlayer.setReleaseMode(ReleaseMode.loop);
-      audioPlayer.setVolume(0.8);
-      audioPlayer.play(AssetSource('alarm.mp3'));
+      audioPlayer.setVolume(0.9);
+      await audioPlayer.play(AssetSource('alarm.mp3'));
     } catch (e) {
       await audioPlayer.dispose();
     }
-    Future.delayed(
-      const Duration(seconds: 15),
+    await Future.delayed(
+      const Duration(seconds: 20),
       () async => await audioPlayer.stop(),
     );
   }

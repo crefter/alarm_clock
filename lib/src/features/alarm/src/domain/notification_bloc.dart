@@ -47,7 +47,7 @@ class NotificationBloc extends Bloc<NotificationEvent, NotificationState> {
     Emitter<NotificationState> emit,
   ) async {
     await notificationService.cancel(event.id);
-    await AlarmService.stop(event.id);
+    await AlarmService.cancel(event.id);
     emit(const NotificationState.canceled());
     emit(const NotificationState.initial());
   }
