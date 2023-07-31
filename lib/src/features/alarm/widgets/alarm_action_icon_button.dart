@@ -40,9 +40,10 @@ class _AlarmActionIconButtonState extends State<AlarmActionIconButton> {
 
   @override
   Widget build(BuildContext context) {
+    double width = MediaQuery.of(context).size.width * 0.12;
     return ActionIconButton(
-      size: 40,
-      icon: const Icon(Icons.add),
+      size: width,
+      icon: const Icon(Icons.add,),
       onPressed: () {
         showModalBottomSheet(
           context: context,

@@ -35,7 +35,7 @@ class ActionIconButton extends StatelessWidget {
         ],
       ),
       child: IconButton(
-        splashRadius: 20,
+        splashRadius: size / 2,
         padding: EdgeInsets.zero,
         onPressed: onPressed,
         icon: icon,

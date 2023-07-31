@@ -15,17 +15,12 @@ class ClockBloc extends Bloc<ClockEvent, ClockState> {
   ClockBloc(this._clockRepository) : super(const ClockState.initial()) {
     on<ClockEvent>((event, emit) async {
       await event.map<Future<void>>(
-        start: (event) => _onStart(event, emit),
         tick: (event) => _onTick(event, emit),
         throwError: (event) => _onThrowError(event, emit),
       );
     });
-  }
-
-  Future<void> _onStart(
-      _ClockStartEvent event, Emitter<ClockState> emit) async {
     _clockRepository.getTime().listen(
-      (clock) {
+          (clock) {
         add(ClockEvent.tick(clock));
       },
       onError: (e, stackTrace) {

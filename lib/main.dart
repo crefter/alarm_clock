@@ -18,47 +18,48 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 Future<void> main() async {
-  WidgetsFlutterBinding.ensureInitialized();
+  runZonedGuarded(
+    () async {
+      WidgetsFlutterBinding.ensureInitialized();
 
-  SharedPreferences sp = await SharedPreferences.getInstance();
+      SharedPreferences sp = await SharedPreferences.getInstance();
 
-  await AlarmService.init();
+      await AlarmService.init();
 
-  LocalNotificationService notificationService = LocalNotificationService(
-    notificationRepository: NotificationRepositoryImpl(sp),
-  );
-  await notificationService.initialize();
-  NotificationBloc notificationBloc = NotificationBloc(
-    notificationService: notificationService,
-  );
-
-  final clockBloc = ClockBloc(
-    ClockRepositoryImpl(
-      timeApi: TimeApi(
-        dayMapper: NumberWeekdayToNameMapper(),
-        monthMapper: MonthMapper(),
-      ),
-    ),
-  );
-  clockBloc.add(const ClockEvent.start());
-  Future.delayed(Duration.zero);
-  runApp(
-    MultiBlocProvider(
-      providers: [
-        BlocProvider.value(
-          value: clockBloc,
+      LocalNotificationService notificationService = LocalNotificationService(
+        notificationRepository: NotificationRepositoryImpl(sp),
+      );
+      await notificationService.initialize();
+      runApp(
+        MultiBlocProvider(
+          providers: [
+            BlocProvider<ClockBloc>(
+              create: (_) => ClockBloc(
+                ClockRepositoryImpl(
+                  timeApi: TimeApi(
+                    dayMapper: NumberWeekdayToNameMapper(),
+                    monthMapper: MonthMapper(),
+                  ),
+                ),
+              ),
+            ),
+            BlocProvider<NotificationBloc>(
+              create: (_) => NotificationBloc(
+                notificationService: notificationService,
+              ),
+            ),
+          ],
+          child: BlocProvider<AlarmBloc>(
+            create: (context) =>
+                AlarmBloc(repository: AlarmRepositoryImpl(pref: sp))
+                  ..add(const AlarmEvent.start()),
+            child: const MyApp(),
+          ),
         ),
-        BlocProvider.value(
-          value: notificationBloc,
-        ),
-      ],
-      child: BlocProvider<AlarmBloc>(
-        create: (context) =>
-            AlarmBloc(repository: AlarmRepositoryImpl(pref: sp))
-              ..add(const AlarmEvent.start()),
-        child: const MyApp(),
-      ),
-    ),
+      );
+    },
+    (error, stackTrace) =>
+        debugPrint('КККККККККККККККККККККККККК$error\n$stackTrace'),
   );
 }
 
